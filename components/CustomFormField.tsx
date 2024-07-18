@@ -10,11 +10,20 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Control } from "react-hook-form"
-import { FormFieldType } from "../forms/PatientForm"
 import Image from "next/image"
 import 'react-phone-number-input/style.css'
 import PhoneInput from "react-phone-number-input"
 import { E164Number } from "libphonenumber-js/core"
+
+export enum FormFieldType {
+    INPUT = 'input',
+    TEXTAREA = 'textarea',
+    CHECKBOX = 'checkbox',
+    PHONE_INPUT = 'phoneInput',
+    DATE_PICKER = 'datePicker',
+    SELECT = 'select',
+    SKELETON = 'skeleton',
+  }
 
 interface CustomProps {
     control: Control<any>,
@@ -73,7 +82,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
             break;
     }
 }
-export const CustomFormField = (props: CustomProps) => {
+ const CustomFormField = (props: CustomProps) => {
     const { control, fieldType, name, label } = props;
     return (
         <FormField
@@ -91,3 +100,4 @@ export const CustomFormField = (props: CustomProps) => {
         />
     )
 }
+export default CustomFormField;
