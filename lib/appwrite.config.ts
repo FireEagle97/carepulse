@@ -10,12 +10,8 @@ export const {
   APPOINTMENT_COLLECTION_ID,
   NEXT_PUBLIC_BUCKET_ID: BUCKET_ID,
 } = process.env;
-const client = new sdk.Client();
-  console.log("Client-side env test vars:", {
-    ENDPOINT,
-    BUCKET_ID,
-  });
 
+const client = new sdk.Client();
 client.setEndpoint(ENDPOINT!).setProject(PROJECT_ID!).setKey(API_KEY!);
 export const databases = new sdk.Databases(client);
 export const users = new sdk.Users(client);
