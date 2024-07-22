@@ -27,6 +27,19 @@ export const getUser = async (userId: string) => {
         console.log(error);
     }
 }
+export const getPatient = async (userId: string) => {
+    try {
+
+        const patient = await databases.listDocuments(
+            DATABASE_ID!,
+            PATIENT_COLLECTION_ID!,
+            [Query.equal('userId', userId)]
+        )
+        return parseStringify(patient);
+    } catch (error) {
+        console.log(error);
+    }
+}
 export const registerPatient = async ({ identificationDocument, ...patient }: RegisterUserParams) => {
     try {
         let file;
