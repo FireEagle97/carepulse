@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Button } from "@/components/ui/button"
-import { Form, FormControl } from "@/components/ui/form"
+import { Form, FormControl, FormField } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import CustomFormField, { FormFieldType } from "../CustomFormField"
 import SubmitButton from "../SubmitButton"
@@ -266,7 +266,29 @@ const RegisterForm = ({ user }: { user: User }) => {
               </FormControl>
             )}
           />
-        <div className="flex flex-col gap-6 xl:flex-row"></div>
+        <section className="space-y-4">
+          <div className="mb-9 space-y-1">
+            <h2 className="sub-header">Consent and Privacy</h2>
+          </div>
+        </section>
+        <CustomFormField 
+          fieldType={FormFieldType.CHECKBOX}
+          control={form.control}
+          name="treatmentConsent"
+          label="I consent to treatment"
+        />
+        <CustomFormField 
+          fieldType={FormFieldType.CHECKBOX}
+          control={form.control}
+          name="disclousreConsent"
+          label="I consent to disclosure of information"
+        />
+        <CustomFormField 
+          fieldType={FormFieldType.CHECKBOX}
+          control={form.control}
+          name="privacyConsent"
+          label="I consent to privacy policy"
+        />        
         <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
       </form>
     </Form>
