@@ -1,5 +1,4 @@
 import AppointmentForm from "@/components/forms/AppointmentForm";
-import PatientForm from "@/components/forms/PatientForm";
 import { getPatient } from "@/lib/actions/patient.actions";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,7 +19,7 @@ export default async function NewAppointment({params: {userId}} : SearchParamPro
             <AppointmentForm 
               type="create"
              userId={userId}
-             patientId={patient.$id}
+             patientId={patient.documents[0].$id}
 
              />
             <p className="copyright mt-10 py-12">

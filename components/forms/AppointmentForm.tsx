@@ -57,8 +57,10 @@ const AppointmentForm = ({
                 status='pending';
                 break;
         }
+        console.log('Before the type', patientId)
         try {
             if(type === 'create' && patientId){
+                console.log("test create")
                 const appointmentData = {
                     userId,
                     patient: patientId,
@@ -71,7 +73,7 @@ const AppointmentForm = ({
                 const appointment = await createAppointment(appointmentData);
                 if(appointment){
                     form.reset();
-                    router.push(`/patients/${userId}/new-appointment/success?appointmentId=${appointment.id}`)
+                    router.push(`/patients/${userId}/new-appointment/success?appointmentId=${appointment.$id}`)
                 }
             }
 
@@ -92,6 +94,7 @@ const AppointmentForm = ({
             buttonLabel = 'Schedule Appointment';
             break;
     }
+    console.log(form.formState.errors);
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 flex-1">
