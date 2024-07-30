@@ -3,29 +3,28 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
 import CustomFormField, { FormFieldType } from "../CustomFormField"
 import SubmitButton from "../SubmitButton"
 import { useState } from "react"
 import { getAppointmentSchema } from "@/lib/validation"
-import { createAppointment } from "@/lib/actions/appointment.actions"
+import { createAppointment, updateAppointment } from "@/lib/actions/appointment.actions"
 import { useRouter } from "next/navigation"
-import { createUser } from "@/lib/actions/patient.actions"
 import { Doctors } from "@/constants"
 import { SelectItem } from "../ui/select"
 import Image from "next/image"
-import { defaultMaxListeners } from "events"
+import { Appointment } from "@/types/appwrite.types"
 
 
 
 const AppointmentForm = ({
-    userId, patientId, type
+    userId, patientId, type, appointment, setOpen
 }: {
     userId: string;
     patientId: string;
     type: "create" | "cancel" | "schedule";
+    appointment: Appointment;
+    setOpen: (open: boolean) => void;
 }) => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
@@ -34,16 +33,16 @@ const AppointmentForm = ({
     const form = useForm<z.infer<typeof AppointmentFormValidation>>({
         resolver: zodResolver(AppointmentFormValidation),
         defaultValues: {
-           primaryPhysician: "",
-           schedule: new Date(),
-           reason: "",
-           note: "",
-           cancellationReason: "",
+            primaryPhysician: appointment ? appointment.primaryPhysician : '',
+            schedule: appointment ? new Date(appointment?.schedule!) : new Date(Date.now()),
+            reason: appointment ? appointment.reason : '',
+            note: appointment ? appointment.note : '',
+            cancellationReason: appointment?.cancellationReason || '',
         },
     })
-
     // 2. Define a submit handler.
     const onSubmit = async (values: z.infer<typeof AppointmentFormValidation>) => {
+        console.log("I'm submitting")
         setIsLoading(true);
         let status;
         switch (type) {
@@ -54,13 +53,12 @@ const AppointmentForm = ({
                 status = 'cancelled';
                 break;
             default:
-                status='pending';
+                status = 'pending';
                 break;
         }
-        console.log('Before the type', patientId)
+        console.log({ type })
         try {
-            if(type === 'create' && patientId){
-                console.log("test create")
+            if (type === 'create' && patientId) {
                 const appointmentData = {
                     userId,
                     patient: patientId,
@@ -71,19 +69,37 @@ const AppointmentForm = ({
                     status: status as Status,
                 }
                 const appointment = await createAppointment(appointmentData);
-                if(appointment){
+                if (appointment) {
                     form.reset();
                     router.push(`/patients/${userId}/new-appointment/success?appointmentId=${appointment.$id}`)
+                }
+            } else {
+                console.log("updating appoitment")
+                const appointmentToUpdate = {
+                    userId,
+                    appointmentId: appointment?.$id,
+                    appointment: {
+                        primaryPhysician: values?.primaryPhysician,
+                        schedule: new Date(values?.schedule),
+                        status: status as Status,
+                        cancellationReason: values?.cancellationReason,
+                    },
+                    type
+                }
+                const updatedAppointment = await updateAppointment(appointmentToUpdate);
+                if (updatedAppointment) {
+                    setOpen && setOpen(false);
+                    form.reset();
                 }
             }
 
         } catch (error) {
-            console.log(error);
+            console.log('Error: ', error);
         }
         setIsLoading(false);
     }
     let buttonLabel;
-    switch (type){
+    switch (type) {
         case 'cancel':
             buttonLabel = 'Cancel Appointment';
             break;
@@ -98,10 +114,11 @@ const AppointmentForm = ({
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 flex-1">
-                <section className="mb-12 space-y-4">
+                {type === 'create' && <section className="mb-12 space-y-4">
                     <h1 className="header">New Appointment</h1>
                     <p className="text-dark-700">Request a new appointment in 10 seconds</p>
                 </section>
+                }
                 {type != "cancel" && (
                     <>
                         <CustomFormField
@@ -156,16 +173,16 @@ const AppointmentForm = ({
                     <CustomFormField
                         fieldType={FormFieldType.TEXTAREA}
                         control={form.control}
-                        name="canellationReason"
-                        label="Reason for canellation"
+                        name="cancellationReason"
+                        label="Reason for cancellation"
                         placeholder="Enter reason for canellation"
                     />
                 )}
-                <SubmitButton isLoading={isLoading} 
-                className={`${type === 'cancel' ? 'shad-danger-btn' : 'shad-primary-btn'}
+                <SubmitButton isLoading={isLoading}
+                    className={`${type === 'cancel' ? 'shad-danger-btn' : 'shad-primary-btn'}
                 w-full`}>{buttonLabel}</SubmitButton>
             </form>
         </Form>
     )
 }
-export default AppointmentForm
+export default AppointmentForm;
