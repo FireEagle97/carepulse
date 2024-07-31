@@ -49,6 +49,10 @@ A healthcare patient management application that allows patients to easily regis
 
 👉 **Manage and Track Application Performance Using Sentry**: The application uses Sentry to monitor and track its performance and detect any errors.
 
+## <a name="quick-start">🤸 Quick Start</a>
+
+Follow these steps to set up the project locally on your machine.
+
 **Prerequisites**
 
 Make sure you have the following installed on your machine:
