@@ -126,7 +126,14 @@
   .data-table {
     @apply z-10 w-full overflow-hidden rounded-lg border border-dark-400 shadow-lg;
   }
-
+  .bg-arrow-icon {
+    background-image: url("/assets/icons/arrow.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 34px;
+    height: 34px;
+  }
+  
   .table-actions {
     @apply flex w-full items-center justify-between space-x-2 p-4;
   }

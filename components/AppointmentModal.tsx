@@ -27,11 +27,11 @@ const AppointmentModal = ({
     const [open, setOpen] = useState(false);
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger>
-                <Button variant="ghost" className={`capitalize ${type === 'schedule' &&
-                    'text-green-500'
+            <DialogTrigger asChild>
+                <button className={`capitalize ${type === 'schedule' &&
+                    'text-green-500 hover:bg-accent hover:text-accent-foreground'
                     }`}>{type}
-                </Button>
+                </button>
             </DialogTrigger>
             <DialogContent className='shad-dialog sm:max-w-md'>
                 <DialogHeader className='mb-4 space-y-3'>

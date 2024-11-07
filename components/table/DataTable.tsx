@@ -86,29 +86,18 @@ function DataTable<TData, TValue>({
           size="sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
-          className="shad-gray-btn"
+          className="shad-gray-btn bg-arrow-icon"
         >
-          <Image
-            src="/assets/icons/arrow.svg"
-            width={24}
-            height={24}
-            alt="arrow"
-          />
+          <span className="sr-only">Previous page</span>
         </Button>
         <Button
           variant="outline"
           size="sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
-          className="shad-gray-btn"
+          className="shad-gray-btn bg-arrow-icon rotate-180"
         >
-          <Image
-            src="/assets/icons/arrow.svg"
-            width={24}
-            height={24}
-            alt="arrow"
-            className="rotate-180"
-          />
+          <span className="sr-only">Next page</span>
         </Button>
       </div>
     </div>
